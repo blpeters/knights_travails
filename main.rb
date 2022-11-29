@@ -8,7 +8,49 @@
 
 # board class
 # initialize with an array containing 64 nodes (or vertices), each represented as a subarray containing a coordinate subarray, a distance variable, and a predecessor_node variable
-# when knight_moves(start, end) is called, traverse graph using start coordinates:
+class Board
+  attr_accessor :queue, :board, :position
+
+  def initialize
+    @board = create_board
+    @queue = []
+    @position = nil
+  end
+
+  def knight_moves(starting_position, ending_position)
+    # when knight_moves(start, end) is called, traverse graph using start coordinates:
+    set_starting_square(starting_position)
+    p board
+    p position
+    enqueue(position)
+  end
+
+  private
+
+  def create_board
+    board_arr = []
+    (1..7).each do |i|
+      (1..7).each do |j|
+        board_arr << [i, j, nil, nil]
+      end
+    end
+    board_arr
+  end
+
+  def set_starting_square(pos)
+    board.each_with_index do |square, index|
+      if square[0..1] == pos
+        square[2] = 0
+        @position = index
+      end
+    end  
+  end
+
+  def enqueue(pos)
+    queue << board[pos]
+    p queue
+  end
+
 
 # until the queue is clear:
 # put node with start coordinates into a queue array with distance = 0, predecessor stays as nil
@@ -36,3 +78,7 @@
 # QUEUE: when we first visit a vertex, enqueue it.
 
 # Output the full path that the knight ends up taking to get to the ending square.
+end
+
+board = Board.new
+board.knight_moves([2,1], [3,3])
