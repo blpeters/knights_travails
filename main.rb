@@ -20,9 +20,13 @@ class Board
   def knight_moves(starting_position, ending_position)
     # when knight_moves(start, end) is called, traverse graph using start coordinates:
     set_starting_square(starting_position)
-    p board
-    p position
     enqueue(position)
+    until queue.empty?
+      dequeue()
+      find_possible_moves()
+      # enqueue
+    end
+
   end
 
   private
@@ -48,8 +52,31 @@ class Board
 
   def enqueue(pos)
     queue << board[pos]
-    p queue
   end
+
+  def dequeue
+    position = queue.shift
+  end
+
+  def find_possible_moves
+    puts "finding moves from position #{position} containing #{board[position]}"
+    possible_moves_arr = []
+    a, b = board[position][0..1] # 2, 1
+    move_distances = [[-2, -1], [-2, 1], [-1,-2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]]
+    move_distances.each do |move|
+      c, d = move
+      possible_moves_arr << [(a + c), (b + d)] if valid_square?((a + c), (b + d))
+    end  
+    p possible_moves_arr
+  end
+
+  def valid_square?(x, y)
+    puts x
+    puts y
+    return false if !(1..7).include?(x) || !(1..7).include?(y)
+    true
+  end
+
 
 
 # until the queue is clear:
