@@ -9,23 +9,26 @@
 # board class
 # initialize with an array containing 64 nodes (or vertices), each represented as a subarray containing a coordinate subarray, a distance variable, and a predecessor_node variable
 class Board
-  attr_accessor :queue, :board, :position
+  attr_accessor :queue, :board, :position_index
 
   def initialize
     @board = create_board
     @queue = []
-    @position = nil
+    @position_index = nil
   end
 
-  def knight_moves(starting_position, ending_position)
+  def knight_moves(starting_coordinates, ending_coordinates)
     # when knight_moves(start, end) is called, traverse graph using start coordinates:
-    set_starting_square(starting_position)
-    enqueue(position)
-    until queue.empty?
-      dequeue()
-      find_possible_moves()
-      # enqueue
-    end
+    set_starting_square(starting_coordinates)
+    enqueue(position_index)
+    # until queue.empty?
+
+    dequeue
+    find_possible_moves
+    p board
+    # enqueue
+    
+    # end
 
   end
 
@@ -41,43 +44,47 @@ class Board
     board_arr
   end
 
-  def set_starting_square(pos)
+  def set_starting_square(coordinates)
     board.each_with_index do |square, index|
-      if square[0..1] == pos
+      if square[0..1] == coordinates
         square[2] = 0
-        @position = index
+        return @position_index = index
       end
     end  
   end
 
-  def enqueue(pos)
-    queue << board[pos]
+  def enqueue(position_index)
+    queue << position_index
   end
 
   def dequeue
-    position = queue.shift
+    position_index = queue.shift
   end
 
   def find_possible_moves
-    puts "finding moves from position #{position} containing #{board[position]}"
     possible_moves_arr = []
-    a, b = board[position][0..1] # 2, 1
+    a, b = board[position_index][0..1] # 2, 1
     move_distances = [[-2, -1], [-2, 1], [-1,-2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]]
     move_distances.each do |move|
       c, d = move
-      possible_moves_arr << [(a + c), (b + d)] if valid_square?((a + c), (b + d))
+      x = a + c
+      y = b + d
+      possible_moves_arr << [x, y] if valid_square?(x, y) && !square_visited?(x, y)
     end  
     p possible_moves_arr
   end
 
   def valid_square?(x, y)
-    puts x
-    puts y
     return false if !(1..7).include?(x) || !(1..7).include?(y)
     true
   end
 
-
+  def square_visited?(x, y)
+    board.each do |square|
+      return true if square[0..1] == [x, y] && square[2] != nil
+    end
+    false
+  end
 
 # until the queue is clear:
 # put node with start coordinates into a queue array with distance = 0, predecessor stays as nil
@@ -108,4 +115,4 @@ class Board
 end
 
 board = Board.new
-board.knight_moves([2,1], [3,3])
+board.knight_moves([2,1], [3,4])
