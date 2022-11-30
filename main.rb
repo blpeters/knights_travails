@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# knights travails pseudocode:
-
 class Board
   attr_accessor :queue, :board, :position_index, :distance, :starting_square
 
